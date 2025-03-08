@@ -9,21 +9,23 @@ def check_image_exists(image_path):
         st.error(f"이미지 파일이 존재하지 않습니다: {image_path}")
         return None
 
-# 로고 표시
+# ✅ 제목 수정 (가독성 개선 + 체형보완 코디 추가)
+st.title("빌러드우먼 체형보완 코디")  
+st.subheader("코로듀이 골덴 원피스 사이즈 추천")  
+
+# ✅ 로고 이미지 표시
 logo_path = "logo.png"
 logo = check_image_exists(logo_path)
 if logo:
-    st.image(logo, width=200)  # 로고 이미지 표시
+    st.image(logo, width=200)
 
-st.title("빌러드우먼 코로듀이 골덴 원피스 사이즈 추천")
-
-# 상품 사진 표시
+# ✅ 상품 이미지 표시
 dress_image_path = "dress_image.jpg"
 dress_image = check_image_exists(dress_image_path)
 if dress_image:
     st.image(dress_image, caption="코로듀이 골덴 원피스", width=300)
 
-# 브래지어 사이즈를 가슴 둘레로 변환
+# ✅ 브래지어 사이즈를 가슴 둘레로 변환
 def convert_bra_to_bust(bra_size):
     bra_chart = {
         "65A": 76, "65B": 78, "65C": 80, "65D": 82,
@@ -36,7 +38,7 @@ def convert_bra_to_bust(bra_size):
     }
     return bra_chart.get(bra_size.upper(), None)
 
-# 사이즈 추천 함수
+# ✅ 사이즈 추천 함수 (보정값 추가)
 def recommend_size(height, weight, bra_size):
     size_chart = {
         "M": {"bust": 90, "length": 103},
@@ -72,7 +74,7 @@ def recommend_size(height, weight, bra_size):
     else:
         weight_based_size = "XXXL"
 
-    # BMI 계산 & 보정값 적용
+    # ✅ BMI 보정값 추가 (23 이상도 보정)
     bmi = weight / (height / 100) ** 2
     bmi_adjustment = 0
     if bmi >= 23:
@@ -81,6 +83,10 @@ def recommend_size(height, weight, bra_size):
         bmi_adjustment = 2
     if bmi >= 30:
         bmi_adjustment = 3
+
+    # ✅ 키가 170 이상이고 XXL 이상이면 한 단계 추가 보정
+    if height >= 170 and initial_size in ["XXL", "XXXL"]:
+        bmi_adjustment += 1
 
     # 최종 사이즈 결정
     size_order = ["M", "L", "XL", "XXL", "XXXL"]
@@ -91,9 +97,14 @@ def recommend_size(height, weight, bra_size):
 
     return recommended_size, bust
 
-# 입력 폼
-height = st.number_input("키 (cm)", min_value=100, max_value=200, value=170)
-weight = st.number_input("몸무게 (kg)", min_value=30, max_value=150, value=68)
+# ✅ 입력 UX 개선 (슬라이더 적용)
+st.subheader("신체 정보 입력")
+
+height = st.slider("키 (cm)", 140, 190, 170, step=1)
+weight = st.slider("몸무게 (kg)", 40, 100, 68, step=1)
+
+st.subheader("브래지어 정보 입력")
+
 bra_size_options = ["65A", "65B", "65C", "65D", "70A", "70B", "70C", "70D", "75A", "75B", "75C", "75D",
                     "80A", "80B", "80C", "80D", "85A", "85B", "85C", "85D", "90A", "90B", "90C", "90D",
                     "95A", "95B", "95C", "95D"]
@@ -103,11 +114,17 @@ if st.button("추천 받기"):
     result = recommend_size(height, weight, bra_size)
     if result is not None:
         recommended_size, bust = result
-        st.success(f"입력하신 브래지어 사이즈({bra_size})를 기준으로 가슴 둘레는 약 {bust}cm로 추정됩니다.")
+        st.success(f"브래지어 사이즈({bra_size}) → 가슴 둘레 추정: {bust}cm")
         st.success(f"추천 사이즈: {recommended_size}")
+
+        # ✅ 추천 로직 설명 추가
+        st.markdown(f"### 추천 이유 📝")
+        st.markdown(f"- **키:** {height}cm, **몸무게:** {weight}kg, **BMI:** {round(weight / (height / 100) ** 2, 1)}")
+        st.markdown(f"- **가슴 둘레:** {bust}cm → 해당하는 사이즈 기준 적용")
+
         st.info("이 추천으로 반품을 줄여 환경에 기여합니다! 😊")
 
-# 디자인 개선
+# ✅ 디자인 개선
 st.markdown("""
     <style>
     .stButton>button {
