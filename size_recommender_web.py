@@ -1,29 +1,45 @@
 import streamlit as st
-import os
 
-# 파일 경로 확인 함수
-def check_image_exists(image_path):
-    if os.path.exists(image_path):
-        return image_path
-    else:
-        st.error(f"이미지 파일이 존재하지 않습니다: {image_path}")
-        return None
+# ✅ 페이지 스타일 (배경색 & 버튼 디자인 유지)
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #FAF3E0; /* 베이지 톤 배경 */
+    }
+    .stButton>button {
+        background-color: #222;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 10px 20px;
+    }
+    .stMarkdown {
+        font-size: 18px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ✅ 제목 수정 (가독성 개선 + 체형보완 코디 추가)
 st.title("🖤 빌러드우먼 체형보완 코디")
 st.subheader("✨ 코로듀이 골덴 원피스 사이즈 추천")
 
-# ✅ 로고 이미지 표시
-logo_path = "logo.png"
-logo = check_image_exists(logo_path)
-if logo:
-    st.image(logo, width=200)
+# ✅ 로고 이미지 표시 (로컬 파일 우선)
+logo_url = "logo.png"
+fallback_logo_url = "https://via.placeholder.com/200"
 
-# ✅ 상품 이미지 표시
-dress_image_path = "dress_image.jpg"
-dress_image = check_image_exists(dress_image_path)
-if dress_image:
-    st.image(dress_image, caption="코로듀이 골덴 원피스", width=300)
+try:
+    st.image(logo_url, width=200)
+except Exception:
+    st.image(fallback_logo_url, width=200)
+
+# ✅ 상품 이미지 표시 (로컬 파일 우선)
+dress_image_url = "dress_image.jpg"
+fallback_dress_url = "https://via.placeholder.com/300"
+
+try:
+    st.image(dress_image_url, caption="코로듀이 골덴 원피스", width=300)
+except Exception:
+    st.image(fallback_dress_url, caption="코로듀이 골덴 원피스", width=300)
 
 # ✅ 브래지어 사이즈를 가슴 둘레로 변환
 def convert_bra_to_bust(bra_size):
@@ -59,7 +75,7 @@ def recommend_size(height, weight, bra_size):
             initial_size = size
             break
     if bust >= 100:
-        initial_size = "XXL"  # 기존 XL를 XXL로 조정
+        initial_size = "XXL"
 
     # 몸무게 기반 사이즈 조정
     weight_based_size = "M"
@@ -114,16 +130,37 @@ if st.button("✨ 사이즈 추천 받기"):
     result = recommend_size(height, weight, bra_size)
     if result is not None:
         recommended_size, bust = result
-        st.markdown(f"## 🎯 추천 사이즈: **{recommended_size}**")
-        st.success(f"브래지어 사이즈({bra_size}) → 가슴 둘레 추정: {bust}cm")
 
-        st.markdown(f"### 📝 추천 이유")
-        st.info(f"- 키: {height}cm | 몸무게: {weight}kg | BMI: {round(weight / (height / 100) ** 2, 1)}")
-        st.info(f"- 가슴 둘레: {bust}cm → 해당 사이즈 기준 적용")
+        # ✅ 판매자 얼굴 + 추천 박스 내부 배치
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            st.image("eune.JPG", width=120)  # 얼굴 크기 증가
+        with col2:
+            st.markdown(
+                f"""
+                <div style="
+                    background-color: #F7F7F7; 
+                    padding: 15px; 
+                    border-radius: 15px;
+                    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+                    font-size: 16px;
+                    display: flex;
+                    align-items: center;
+                ">
+                    <strong>🎯 추천 사이즈: {recommended_size}</strong><br>
+                    <span style="color: #666;">브래지어 사이즈({bra_size}) → 가슴 둘레 추정: {bust}cm</span>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-st.markdown("""
-    <style>
-    .stButton>button {background-color: black; color: white;}
-    .stApp {background-color: #f8f8f8;}
-    </style>
-""", unsafe_allow_html=True)
+        # ✅ "왜 이 사이즈가 추천되었나요?" 유지
+        st.markdown(f"### 📝 왜 **{recommended_size}** 사이즈가 추천되었나요?")
+        st.info(
+            f"✔ 키({height}cm)와 몸무게({weight}kg)를 기준으로 분석된 결과입니다.\n"
+            f"✔ 브래지어 사이즈({bra_size}) 기준 가슴 둘레가 {bust}cm로 측정되었습니다.\n"
+            f"✔ BMI({round(weight / (height / 100) ** 2, 1)}) 기준으로 적절한 사이즈가 추천되었습니다."
+        )
+
+# ✅ ESG 메시지 추가
+st.info("이 추천으로 반품을 줄여 환경에 기여합니다! 😊")
