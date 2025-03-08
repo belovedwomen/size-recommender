@@ -10,8 +10,8 @@ def check_image_exists(image_path):
         return None
 
 # ✅ 제목 수정 (가독성 개선 + 체형보완 코디 추가)
-st.title("빌러드우먼 체형보완 코디")  
-st.subheader("코로듀이 골덴 원피스 사이즈 추천")  
+st.title("🖤 빌러드우먼 체형보완 코디")
+st.subheader("✨ 코로듀이 골덴 원피스 사이즈 추천")
 
 # ✅ 로고 이미지 표시
 logo_path = "logo.png"
@@ -110,28 +110,20 @@ bra_size_options = ["65A", "65B", "65C", "65D", "70A", "70B", "70C", "70D", "75A
                     "95A", "95B", "95C", "95D"]
 bra_size = st.selectbox("브래지어 사이즈", bra_size_options, index=bra_size_options.index("85C"))
 
-if st.button("추천 받기"):
+if st.button("✨ 사이즈 추천 받기"):
     result = recommend_size(height, weight, bra_size)
     if result is not None:
         recommended_size, bust = result
+        st.markdown(f"## 🎯 추천 사이즈: **{recommended_size}**")
         st.success(f"브래지어 사이즈({bra_size}) → 가슴 둘레 추정: {bust}cm")
-        st.success(f"추천 사이즈: {recommended_size}")
 
-        # ✅ 추천 로직 설명 추가
-        st.markdown(f"### 추천 이유 📝")
-        st.markdown(f"- **키:** {height}cm, **몸무게:** {weight}kg, **BMI:** {round(weight / (height / 100) ** 2, 1)}")
-        st.markdown(f"- **가슴 둘레:** {bust}cm → 해당하는 사이즈 기준 적용")
+        st.markdown(f"### 📝 추천 이유")
+        st.info(f"- 키: {height}cm | 몸무게: {weight}kg | BMI: {round(weight / (height / 100) ** 2, 1)}")
+        st.info(f"- 가슴 둘레: {bust}cm → 해당 사이즈 기준 적용")
 
-        st.info("이 추천으로 반품을 줄여 환경에 기여합니다! 😊")
-
-# ✅ 디자인 개선
 st.markdown("""
     <style>
-    .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        font-size: 16px;
-    }
-    .stApp {background-color: #f0f0f0;}
+    .stButton>button {background-color: black; color: white;}
+    .stApp {background-color: #f8f8f8;}
     </style>
 """, unsafe_allow_html=True)
