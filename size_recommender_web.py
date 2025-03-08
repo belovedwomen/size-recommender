@@ -1,41 +1,59 @@
 import streamlit as st
 
-# ✅ 페이지 스타일 (배경색 & 버튼 디자인 유지)
+# ✅ 페이지 스타일 (브랜드 컬러 적용 & 고급스러운 디자인)
 st.markdown("""
     <style>
     .stApp {
-        background-color: #FAF3E0; /* 베이지 톤 배경 */
+        background-color: #EDE6F2; /* 브랜드 컬러 배경 */
+        font-family: 'Noto Sans', sans-serif; /* 고급스러운 폰트 */
     }
     .stButton>button {
-        background-color: #222;
-        color: white;
-        font-size: 16px;
-        border-radius: 5px;
-        padding: 10px 20px;
+        background-color: #222 !important; /* 블랙 버튼 */
+        color: #FFFFFF !important; /* 글씨 하얀색 */
+        font-size: 18px !important;
+        border-radius: 8px !important;
+        padding: 12px 20px !important;
+        font-weight: bold !important;
+        border: 2px solid #A68A64 !important; /* 골드 테두리 유지 */
     }
-    .stMarkdown {
+
+    /* 버튼 내부 텍스트 색상을 강제로 흰색으로 지정 */
+    .stButton>button * {
+        color: #FFFFFF !important;
+    }
+    .stMarkdown, h1, h2, h3, h4, h5, h6, p, div {
+        color: #333 !important; /* 검정색 텍스트 */
+        font-family: 'Noto Sans', sans-serif;
+    }
+    .recommend-box {
+        background-color: #E1D7EB; /* 조금 더 진한 배경색 */
+        padding: 15px;
+        border-radius: 15px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
         font-size: 18px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        font-weight: bold;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# ✅ 제목 수정 (가독성 개선 + 체형보완 코디 추가)
-st.title("🖤 빌러드우먼 체형보완 코디")
-st.subheader("✨ 코로듀이 골덴 원피스 사이즈 추천")
+# ✅ 제목 (고급스럽게 Bold 처리)
+st.title("💜 **빌러드우먼 체형보완 코디**")
+st.subheader("✨ **코로듀이 골덴 원피스 사이즈 추천**")
 
-# ✅ 로고 이미지 표시 (로컬 파일 우선)
+# ✅ 로고 이미지 표시
 logo_url = "logo.png"
 fallback_logo_url = "https://via.placeholder.com/200"
-
 try:
     st.image(logo_url, width=200)
 except Exception:
     st.image(fallback_logo_url, width=200)
 
-# ✅ 상품 이미지 표시 (로컬 파일 우선)
+# ✅ 상품 이미지 표시
 dress_image_url = "dress_image.jpg"
 fallback_dress_url = "https://via.placeholder.com/300"
-
 try:
     st.image(dress_image_url, caption="코로듀이 골덴 원피스", width=300)
 except Exception:
